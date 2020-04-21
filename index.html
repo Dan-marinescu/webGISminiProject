@@ -64,19 +64,31 @@
             }*/
             l.bindPopup("Check");
         }
+
+        var blueMarker =  "#0000ff";
+        var redMarker = "#ff0000" ;
         
         map.createPane('pan_Us');
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
+        function getColor(item){
+            console.log(item);
+            if(item>=50)
+                return redMarker;
+            return blueMarker;
+        }
 
-
-        //Define a style
-        var myStyle = {
-            "color": "#ff7800",
-            "weight": 5,
-            "opacity": 0.65
+        var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
+        {onEachFeature:popUp,
+        style: function (feature) {
+            return {
+                "color": getColor(feature.properties.rep16_frac),
+                "fillColor" : getColor(feature.properties.rep16_frac),
+                "weight": 1,
+                "opacity": 0.65
             };
-        var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],{onEachFeature:popUp,style:myStyle,pane:'pan_Us'}).addTo(map);
+        }
+        ,pane:'pan_Us'}).addTo(map);
         
 
         setBounds();
