@@ -62,7 +62,24 @@
                 }
                 l.bindPopup(out.join("<br />"));
             }*/
-            l.bindPopup("Check");
+            l.bindPopup(f.properties.state);
+        }
+        function pop_Usaver1_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['county'] !== null ? 'Country and state:' + autolinker.link(feature.properties['county'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['total_population'] !== null ? 'Total population:' + autolinker.link(feature.properties['total_population'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +'Republicans : '+ (parseFloat(feature.properties.rep16_frac).toFixed(2)+'%').fontcolor(redMarker) +'</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +'Democrats : '+ (parseFloat(feature.properties.dem16_frac).toFixed(2) +'%').fontcolor(blueMarker) + '</td>\
+                    </tr>\
+                </table>';
+                layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
         var blueMarker =  "#0000ff";
@@ -79,7 +96,7 @@
         }
 
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
-        {onEachFeature:popUp,
+        {onEachFeature:pop_Usaver1_1,
         style: function (feature) {
             return {
                 "color": getColor(feature.properties.rep16_frac),
