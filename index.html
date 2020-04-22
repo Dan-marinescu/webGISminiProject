@@ -8,6 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
         <style>
         #map {
             width: 1931px;
@@ -29,6 +30,7 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
+        <script src="js/leaflet-search.js"></script>
         <script src="data/Usaver1_1.js"></script>
         <script>
         var map = L.map('map', {
@@ -62,7 +64,7 @@
                 }
                 l.bindPopup(out.join("<br />"));
             }*/
-            l.bindPopup("Check");
+            l.bindPopup(f.properties.county);
         }
 
         var blueMarker =  "#0000ff";
@@ -72,7 +74,6 @@
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
         function getColor(item){
-            console.log(item);
             if(item>=50)
                 return redMarker;
             return blueMarker;
@@ -90,6 +91,11 @@
         }
         ,pane:'pan_Us'}).addTo(map);
         
+        var searchLayer = L.layerGroup().addTo(map);
+        //... adding data in searchLayer ...
+        map.addControl( new L.Control.Search({layer: searchLayer}) );
+        //searchLayer is a L.LayerGroup contains searched markers
+
 
         setBounds();
         </script>
