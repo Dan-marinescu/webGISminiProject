@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/easy-button.css">
+        <link rel="stylesheet" href="css/leaflet-tag-filter-button.css">
         <style>
         #map {
             width: 1931px;
@@ -31,6 +33,8 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet-search.js"></script>
+        <script src="js/easy-button.js"></script>
+        <script src="js/leaflet-tag-filter-button.js"></script>
         <script src="data/Usaver1_1.js"></script>
         <script>
         var map = L.map('map', {
@@ -66,7 +70,23 @@
             }*/
             l.bindPopup(f.properties.county);
         }
-
+        function pop_Usaver1_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['county'] !== null ? 'Country and state:' + autolinker.link(feature.properties['county'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['total_population'] !== null ? 'Total population:' + autolinker.link(feature.properties['total_population'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +'Republicans : '+ feature.properties.rep16_frac +'</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +'Liberaly : '+ feature.properties.dem16_frac + '</td>\
+                    </tr>\
+                </table>';
+                layer.bindPopup(popupContent, {maxHeight: 400});
+        }
         var blueMarker =  "#0000ff";
         var redMarker = "#ff0000" ;
         
@@ -78,9 +98,13 @@
                 return redMarker;
             return blueMarker;
         }
-
+        function Democrats(feature){
+            if(feature.properties.dem16_frac >= 50)
+                return true;
+            return false;
+        }
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
-        {onEachFeature:popUp,
+        { onEachFeature:pop_Usaver1_1,
         style: function (feature) {
             return {
                 "color": getColor(feature.properties.rep16_frac),
@@ -89,14 +113,20 @@
                 "opacity": 0.65
             };
         }
-        ,pane:'pan_Us'}).addTo(map);
-        
-        var searchLayer = L.layerGroup().addTo(map);
-        //... adding data in searchLayer ...
-        map.addControl( new L.Control.Search({layer: searchLayer}) );
-        //searchLayer is a L.LayerGroup contains searched markers
+        ,pane:'pan_Us'
+        });
+        jsonTest.
+        jsonTest.addTo(map);
 
 
+        map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
+        jsonTest.eachLayer(function (layer) {
+            layer._path.id = 'feature-' + layer.feature.properties.id;
+        });
+   //     L.control.tagFilterButton({
+     //       data: ['fast', 'slow']
+      //  }).addTo( map );
+  
         setBounds();
         </script>
     </body>
