@@ -104,7 +104,7 @@
             return false;
         }
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
-        { onEachFeature:pop_Usaver1_1,
+        {onEachFeature:pop_Usaver1_1,
         style: function (feature) {
             return {
                 "color": getColor(feature.properties.rep16_frac),
