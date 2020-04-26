@@ -19,6 +19,9 @@
         </style>
         <title></title>
     </head>
+
+    <!-- SideBar FROM HERE -->
+
     <body>
         <div id="sidebar" class="sidebar collapsed">
             <!-- Nav tabs -->
@@ -26,16 +29,19 @@
                 <ul role="tablist">
                     <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                     <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-                    <li>
-                        <a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank">
+                    <li><a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank">
                             <img  src="images/github.png">
                         </a>
                     </li>
+
+                    <li><a href="#search" role="tab"></i></a></li>
+
                 </ul>
     
-                <ul role="tablist">
+                <!-- <ul role="tablist">
                     <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-                </ul>
+                </ul> -->
+                
             </div>
     
             <!-- Tab panes -->
@@ -61,13 +67,21 @@
                     <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
                 </div>
     
-                <div class="sidebar-pane" id="settings">
-                    <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                <div class="sidebar-pane" id="search">
+                    <h1 class="sidebar-header">Search<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    
                 </div>
+
+                <!-- <div class="sidebar-pane" id="settings">
+                    <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                </div> -->
+
             </div>
         </div>
-        <div id="map">
-        </div>
+
+        <!-- SideBar UNTIL HERE -->
+
+        <div id="map"></div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/leaflet.ajax.min.js"></script>
