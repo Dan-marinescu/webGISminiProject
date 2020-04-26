@@ -114,10 +114,10 @@
                         <td colspan="2">' + (feature.properties['total_population'] !== null ? 'Total population:' + autolinker.link(feature.properties['total_population'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' +'Republicans : '+ feature.properties.rep16_frac +'</td>\
+                        <td colspan="2">' +'Republicans: '+ (parseFloat(feature.properties.rep16_frac).toFixed(2)+'%').fontcolor(redMarker) +'</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' +'Liberaly : '+ feature.properties.dem16_frac + '</td>\
+                        <td colspan="2">' +'Democrats: '+ (parseFloat(feature.properties.dem16_frac).toFixed(2) +'%').fontcolor(blueMarker) + '</td>\
                     </tr>\
                 </table>';
                 layer.bindPopup(popupContent, {maxHeight: 400});
@@ -129,15 +129,12 @@
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
         function getColor(item){
-            if(item>=50)
-                return redMarker;
-            return blueMarker;
+            if(item>=50){
+                return "rgb("+ item/100*255 + ",0,0)";
+            }
+            return "rgb(0,0,"+ item/100*255 + ")";
         }
-        function Democrats(feature){
-            if(feature.properties.dem16_frac >= 50)
-                return true;
-            return false;
-        }
+
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
         {onEachFeature:pop_Usaver1_1,
         style: function (feature) {
