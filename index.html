@@ -85,6 +85,7 @@
         <script src="js/leaflet-sidebar.js"></script>
         <script src="data/Usaver1_1.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+        
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
@@ -125,6 +126,17 @@
                 </table>';
                 layer.bindPopup(popupContent, {maxHeight: 400});
         }
+        function pop_Isr_saver1_1(feature, layer) {
+            console.log(feature.properties['WinningPar']);
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"> asdasdasdasdsad  </td>\
+                    </tr>\
+                </table>';
+                layer.bindPopup(popupContent, {maxHeight: 400});
+                //<td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Winning party:' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) : '') + '</td>\
+
+        }
         var blueMarker =  "#0000ff";
         var redMarker = "#ff0000" ;
         
@@ -151,8 +163,33 @@
         ,pane:'pan_Us'
         });
         jsonTest.addTo(map);
-
-
+        map.createPane('pan_Isr');
+        map.getPane('pan_Isr').style.zIndex = 401;
+        map.getPane('pan_Isr').style['mix-blend-mode'] = 'normal';
+        function getColorIsr(item){
+            if(item == 'פה'){
+                return "rgb(255,0,0)";
+            }
+            if(item == 'מחל')
+                return "rgb(0,255,0)";
+            return "rgb(0,0,255)";
+        }
+        var jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
+        {
+        onEachFeature:pop_Isr_saver1_1,
+        style: function (feature) {
+            return {
+                "color": getColorIsr(feature.properties.WinningPar),
+                "fillColor": getColorIsr(feature.properties.WinningPar),
+                "weight": 1,
+                "opacity": 0.65
+            };
+        }
+        ,pane:'pan_Isr'
+        });
+        jsonISR.addTo(map);
+    //    map.fitBounds(jsonISR.getBounds());
+        //getColorIsr(feature.properties.WinningPar)
        // map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
        /* jsonTest.eachLayer(function (layer) {
             layer._path.id = 'feature-' + layer.feature.properties.id;
@@ -179,8 +216,11 @@
         var myLink = document.getElementById('mylink');
         function checkFunction()
         {
-            console.log("check");
-            return false;
+            if (map.hasLayer(jsonISR)) {
+                map.removeLayer(jsonISR);
+            } else {
+                map.addLayer(jsonISR);
+            }
         }
 
         
