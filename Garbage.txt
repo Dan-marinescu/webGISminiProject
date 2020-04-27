@@ -500,3 +500,35 @@
         });
         bounds_group.addLayer(layer_Usaver1_1);
         map.addLayer(layer_Usaver1_1);
+         /*  var panelContent = {
+            id: 'userinfo',                     // UID, used to access the panel
+            tab: '<i class="fa fa-gear"></i>',  // content can be passed as HTML string,
+            pane: '<h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>',        // DOM elements can be passed, too
+            position: 'bottom'                  // vertical alignment, 'top' or 'bottom'
+        };
+        sidebar.addPanel(panelContent);*/
+        //... adding data in searchLayer ...
+        
+        //var panel = sidebar.getPane('settingsPane'); new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true})
+       /* sidebar.addPanel({
+                id:  'b',
+                tab:  '<i class="fa fa-envelope"></i>',
+                title: 'Messages',
+                pane: '<p>user ipsum dolor sit amet</p>',
+            });
+        sidebar.open('b');
+        sidebar.addPanel({
+                id:   'js-api',
+                tab:  '<i class="fa fa-gear"></i>',
+                title: 'JS API',
+                pane: '<p>The Javascript API allows to dynamically create or modify the panel state.<p/><p><button onclick="sidebar.enablePanel(\'mail\')">enable mails panel</button><button onclick="sidebar.disablePanel(\'mail\')">disable mails panel</button></p><p><button onclick="addUser()">add user</button></b>',
+            });*/
+        //panel.addControl( new L.Control.Search() );
+
+        //document.getElementById("settings").el;
+       // mytab.appendChild();appendChild()
+            /*   $('#textsearch').on('keyup', function(e) {
+
+        controlSearch.searchText( e.target.value );
+
+        })*/

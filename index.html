@@ -10,60 +10,57 @@
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/easy-button.css">
-        <link rel="stylesheet" href="css/leaflet-sidebar.css">
+        <link rel="stylesheet" href="/css/leaflet-sidebar.css" />
         <style>
+            html, body {
+            height: 100%;
+            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
         #map {
-            width: 1931px;
-            height: 1252px;
+            height: 100%;
+        }
+
+        .lorem {
+            font-style: italic;
+            color: #AAA;
         }
         </style>
         <title></title>
     </head>
     <body>
-        <div id="sidebar" class="sidebar collapsed">
-            <!-- Nav tabs -->
-            <div class="sidebar-tabs">
+            <!-- optionally define the sidebar content via HTML markup -->
+        <div id="sidebar" class="leaflet-sidebar collapsed">
+
+            <!-- nav tabs -->
+            <div class="leaflet-sidebar-tabs">
+                <!-- top aligned tabs -->
                 <ul role="tablist">
-                    <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                    <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-                    <li>
-                        <a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank">
-                            <img  src="images/github.png">
-                        </a>
-                    </li>
+                    <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li>
                 </ul>
-    
+
+                <!-- bottom aligned tabs -->
                 <ul role="tablist">
-                    <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+                    <li><a href="https://github.com/benjaminyakobi/webGISminiProject/" >
+                        <img src="/images/github.png">
+                    </a> <i class="fa fa-github"></i></a></li>
                 </ul>
             </div>
-    
-            <!-- Tab panes -->
-            <div class="sidebar-content">
-                <div class="sidebar-pane" id="home">
-                    <h1 class="sidebar-header">
+
+            <!-- panel content -->
+            <div class="leaflet-sidebar-content">
+                <div class="leaflet-sidebar-pane" id="home">
+                    <h1 class="leaflet-sidebar-header">
                         sidebar-v2
-                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        <span class="leaflet-sidebar-close">
+                            <i class="fa fa-caret-left">
+                            </i>
+                        </span>
                     </h1>
-    
-                    <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                    <button id='CheckButton' onclick="checkFunction()">
+                        button
+                    </button>
                 </div>
-    
-                <div class="sidebar-pane" id="profile">
-                    <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                </div>
-    
-                <div class="sidebar-pane" id="settings">
-                    <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                </div>
+
             </div>
         </div>
         <div id="map">
@@ -82,6 +79,7 @@
         <script src="js/easy-button.js"></script>
         <script src="js/leaflet-sidebar.js"></script>
         <script src="data/Usaver1_1.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
@@ -153,11 +151,40 @@
         jsonTest.addTo(map);
 
 
-        map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
-        jsonTest.eachLayer(function (layer) {
+       // map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
+       /* jsonTest.eachLayer(function (layer) {
             layer._path.id = 'feature-' + layer.feature.properties.id;
+        });*/
+        
+        var sidebar = L.control.sidebar({ container: 'sidebar' }).addTo(map);
+        var searchbutton = new L.Control.Search(
+            {layer: jsonTest,
+            propertyName: 'county',
+            zoom : 9,
+            markerlocation : true,
+            });
+        searchbutton.on('search:locationfound', function(e) {
+                //console.log('search:locationfound', );
+                //map.removeLayer(this._markerSearch)
+                e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+                if(e.layer._popup)
+                    e.layer.openPopup();
+                }).on('search:collapsed', function(e) {
+                featuresLayer.eachLayer(function(layer) {	//restore feature color
+                    featuresLayer.resetStyle(layer);
+                });	
         });
-        var sidebar = L.control.sidebar('sidebar').addTo(map);
+        var myLink = document.getElementById('mylink');
+        function checkFunction()
+        {
+            console.log("check");
+            return false;
+        }
+
+        
+
+        searchbutton.addTo(map);
+     
 
         setBounds();
         </script>
