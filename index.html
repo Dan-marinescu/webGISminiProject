@@ -24,6 +24,35 @@
             font-style: italic;
             color: #AAA;
         }
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 16px;
+            height: 16px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+        .legend header{
+            text-align: center;
+            font-size: 16px;
+            margin: 2px 12px 8px;
+            color: #777;
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
         </style>
         <title></title>
     </head>
@@ -62,6 +91,12 @@
                     <button id='CheckButton' onclick="checkFunction()">
                         button
                     </button>
+                    <fieldset id='radioLayer'>
+                        <input type="radio" value="Israel" onclick="handleClick(this);"  name="group1" >
+                        <label>Israel</label>
+                        <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1" >
+                        <label>United States</label>
+                    </fieldset>
                 </div>
 
             </div>
@@ -110,6 +145,11 @@
         layer_OSMStandard_0;
         map.addLayer(layer_OSMStandard_0);
         function pop_Usaver1_1(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlightUS,
+                click: zoomToFeature
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['county'] !== null ? 'Country and state:' + autolinker.link(feature.properties['county'].toLocaleString()) : '') + '</td>\
@@ -127,14 +167,24 @@
                 layer.bindPopup(popupContent, {maxHeight: 400});
         }
         function pop_Isr_saver1_1(feature, layer) {
-            console.log(feature.properties['WinningPar']);
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlightISR,
+                click: zoomToFeature
+            });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2"> asdasdasdasdsad  </td>\
+                        <td colspan="2">' + (feature.properties['CityNameHe'] !== null ? 'City name(he):' + autolinker.link(feature.properties['CityNameHe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CityNameEn'] !== null ? 'City name:' + autolinker.link(feature.properties['CityNameEn'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Winning party:' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
                 layer.bindPopup(popupContent, {maxHeight: 400});
-                //<td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Winning party:' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) : '') + '</td>\
+                //<td 
 
         }
         var blueMarker =  "#0000ff";
@@ -171,8 +221,8 @@
                 return "rgb(255,0,0)";
             }
             if(item == 'מחל')
-                return "rgb(0,255,0)";
-            return "rgb(0,0,255)";
+                return "rgb(0,0,255)";
+            return "rgb(64,64,64)";
         }
         var jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
         {
@@ -187,7 +237,6 @@
         }
         ,pane:'pan_Isr'
         });
-        jsonISR.addTo(map);
     //    map.fitBounds(jsonISR.getBounds());
         //getColorIsr(feature.properties.WinningPar)
        // map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
@@ -216,18 +265,145 @@
         var myLink = document.getElementById('mylink');
         function checkFunction()
         {
-            if (map.hasLayer(jsonISR)) {
+           /* if (map.hasLayer(jsonISR)) {
                 map.removeLayer(jsonISR);
             } else {
                 map.addLayer(jsonISR);
-            }
+            }*/
+            console.log(map.getBounds());
         }
 
         
 
         searchbutton.addTo(map);
      
+        var USlegend = L.control({position: 'bottomright'});
+        
+        USlegend.onAdd = function (map) {
 
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0,10,20,30,40,50,60,70,80,90,100],
+                labels = ['Democrats','Republicans'];
+            div.innerHTML += "<header>Elections</header>";
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length -1; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) +'">' +'</i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+
+        USlegend.addTo(map);
+
+        var ISRlegend = L.control({position: 'bottomright'});
+        
+        ISRlegend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = ['מחל','פה','אחרים'],
+                labels = [];
+            div.innerHTML += "<header>Winning party</header>";
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length ; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColorIsr(grades[i]) +'">' +'</i> ' +
+                    grades[i] +  '<br>' ;
+            }
+
+            return div;
+        };
+
+        //ISRlegend.addTo(map);
+
+
+        var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>US</h4>' +  (props ?
+                '<b>State and County:</b><br />' + props.county 
+                : 'Hover over a state');
+        };
+
+        info.addTo(map);    
+
+        function handleClick(item){
+            if(item.value == 'Israel')
+            {
+                if (map.hasLayer(jsonTest)) {
+                    map.removeLayer(jsonTest);
+                }
+                if (map.hasLayer(jsonISR) == false) {
+                    map.addLayer(jsonISR);
+                } 
+                map.removeControl(USlegend);
+                ISRlegend.addTo(map);
+                map.fitBounds([[34.55168582782351,41.94587334703223],[28.207560622035196,28.279142328468787]]);
+                info.update = function (props) {
+                    this._div.innerHTML = '<h4>Israel</h4>' +  (props ?
+                        '<b>City name:</b><br />' + props.CityNameEn  +'<br />' + 'Winning party : ' + props.WinningPar
+                        : 'Hover over a city');
+                };
+            }
+            if(item.value == 'United States')
+            {
+                if (map.hasLayer(jsonISR)) {
+                    map.removeLayer(jsonISR);
+                }
+                if (map.hasLayer(jsonTest) == false) {
+                    map.addLayer(jsonTest);
+                } 
+                map.fitBounds([[29.209695545884674,-136.9676690548505],[56.09332735571773,-79.09526638980783]]);
+                map.removeControl(ISRlegend);
+                USlegend.addTo(map);
+                info.update = function (props) {
+                    this._div.innerHTML = '<h4>US</h4>' +  (props ?
+                        '<b>State and County:</b><br />' + props.county 
+                        : 'Hover over a state');
+                };
+            }
+        }
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+            info.update(layer.feature.properties);
+        }
+        function resetHighlightUS(e) {
+            jsonTest.resetStyle(e.target);
+            info.update();
+        }
+        function resetHighlightISR(e) {
+            jsonISR.resetStyle(e.target);
+            info.update();
+        }
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+
+
+        var checkDefault = document.getElementById("radioUS");
+        checkDefault.checked = true;
         setBounds();
         </script>
     </body>
