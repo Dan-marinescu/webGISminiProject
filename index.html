@@ -72,6 +72,10 @@
 
                 <!-- bottom aligned tabs -->
                 <ul role="tablist">
+                    <li><a href="https://public.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county/map/?disjunctive.state&dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQVZHIiwieUF4aXMiOiJyZXAxNl9mcmFjIiwic2NpZW50aWZpY0Rpc3BsYXkiOnRydWUsImNvbG9yIjoiI0U5MUQwRSJ9LHsidHlwZSI6ImNvbHVtbiIsImZ1bmMiOiJBVkciLCJ5QXhpcyI6ImRlbTE2X2ZyYWMiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiIjMjMyMDY2In1dLCJ4QXhpcyI6InN0YXRlIiwibWF4cG9pbnRzIjoyMDAsInNvcnQiOiIiLCJjb25maWciOnsiZGF0YXNldCI6InVzYS0yMDE2LXByZXNpZGVudGlhbC1lbGVjdGlvbi1ieS1jb3VudHkiLCJvcHRpb25zIjp7ImRpc2p1bmN0aXZlLnN0YXRlIjp0cnVlfX19XSwidGltZXNjYWxlIjoiIiwiZGlzcGxheUxlZ2VuZCI6dHJ1ZSwiYWxpZ25Nb250aCI6dHJ1ZX0%3D&basemap=mapbox.light&location=5,33.11915,-103.44727" >
+                        <img src="/images/us.png">
+                    <li><a href="https://votes20.gov.il/" >
+                        <img src="/images/il.png">
                     <li><a href="https://github.com/benjaminyakobi/webGISminiProject/" >
                         <img src="/images/github.png">
                     </a> <i class="fa fa-github"></i></a></li>
@@ -82,21 +86,21 @@
             <div class="leaflet-sidebar-content">
                 <div class="leaflet-sidebar-pane" id="home">
                     <h1 class="leaflet-sidebar-header">
-                        sidebar-v2
+                        Options Bar
                         <span class="leaflet-sidebar-close">
                             <i class="fa fa-caret-left">
                             </i>
                         </span>
                     </h1>
+                    <fieldset id='radioLayer'>
+                        <input type="radio" value="Israel" onclick="handleClick(this);"  name="group1" >
+                        <img src="/images/il-tiny.png"><label>Israel</label>
+                        <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1" >
+                        <img src="/images/us-tiny.png"><label>United States</label>
+                    </fieldset>
                     <button id='CheckButton' onclick="checkFunction()">
                         button
                     </button>
-                    <fieldset id='radioLayer'>
-                        <input type="radio" value="Israel" onclick="handleClick(this);"  name="group1" >
-                        <label>Israel</label>
-                        <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1" >
-                        <label>United States</label>
-                    </fieldset>
                 </div>
 
             </div>
@@ -174,13 +178,19 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['CityNameHe'] !== null ? 'City name(he):' + autolinker.link(feature.properties['CityNameHe'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['CityNameHe'] !== null ? 'City name(he): ' + autolinker.link(feature.properties['CityNameHe'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['CityNameEn'] !== null ? 'City name:' + autolinker.link(feature.properties['CityNameEn'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['CityNameEn'] !== null ? 'City name: ' + autolinker.link(feature.properties['CityNameEn'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Winning party:' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] =='פה') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - כחול לבן' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] =='מחל') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - ליכוד' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] =='פה') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f28'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] =='מחל') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f18'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Total Voters: ' + autolinker.link(feature.properties['Voters'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
                 layer.bindPopup(popupContent, {maxHeight: 400});
@@ -245,13 +255,38 @@
         });*/
         
         var sidebar = L.control.sidebar({ container: 'sidebar' }).addTo(map);
-        var searchbutton = new L.Control.Search(
+        
+        var searchbuttonIL = new L.Control.Search(
+            {layer: jsonISR,
+            propertyName: 'CityNameHe', 
+            zoom : 12,
+            markerlocation : true,
+            textPlaceholder: 'חיפוש עבור ישראל...',
+            textErr: 'המיקום לא נמצא',
+            textCancel: "ביטול"
+            });
+
+        var searchbuttonUS = new L.Control.Search(
             {layer: jsonTest,
-            propertyName: 'county',
+            propertyName: 'county', 
             zoom : 9,
             markerlocation : true,
+            textPlaceholder: 'Search for US...'
             });
-        searchbutton.on('search:locationfound', function(e) {
+
+        searchbuttonIL.on('search:locationfound', function(e) {
+            //console.log('search:locationfound', );
+            //map.removeLayer(this._markerSearch)
+            e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+            if(e.layer._popup)
+                e.layer.openPopup();
+            }).on('search:collapsed', function(e) {
+            featuresLayer.eachLayer(function(layer) {	//restore feature color
+                featuresLayer.resetStyle(layer);
+            });	
+        });
+
+        searchbuttonUS.on('search:locationfound', function(e) {
                 //console.log('search:locationfound', );
                 //map.removeLayer(this._markerSearch)
                 e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
@@ -262,6 +297,7 @@
                     featuresLayer.resetStyle(layer);
                 });	
         });
+
         var myLink = document.getElementById('mylink');
         function checkFunction()
         {
@@ -274,8 +310,9 @@
         }
 
         
+        searchbuttonUS.addTo(map);
+        searchbuttonIL.addTo(map);
 
-        searchbutton.addTo(map);
      
         var USlegend = L.control({position: 'bottomright'});
         
