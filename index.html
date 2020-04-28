@@ -29,13 +29,9 @@
                 <ul role="tablist">
                     <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                     <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-                    <li><a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank">
-                            <img  src="images/github.png">
-                        </a>
-                    </li>
-
-                    <li><a href="#search" role="tab"></i></a></li>
-
+                    <li><a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank"><img  src="images/github.png"></a></li>
+                    <li><a href="#search" role="tab" target ="_blank"><img src ="images/search-icon2.png"></i></a></li>
+                    <li><a href="#filter" role="tab" target ="_blank"><img src ="images/checkbox.png"></i></a></li>
                 </ul>
     
                 <!-- <ul role="tablist">
@@ -52,15 +48,6 @@
                         <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                     </h1>
     
-                    <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    
-                    <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
                 </div>
     
                 <div class="sidebar-pane" id="profile">
@@ -71,10 +58,10 @@
                     <h1 class="sidebar-header">Search<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
                     
                 </div>
-
-                <!-- <div class="sidebar-pane" id="settings">
-                    <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                </div> -->
+                <div class="sidebar-pane" id="filter">
+                    <h1 class="sidebar-header">Filter<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    
+                </div>
 
             </div>
         </div>
@@ -122,10 +109,16 @@
         function pop_Usaver1_1(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['county'] !== null ? 'Country and state:' + autolinker.link(feature.properties['county'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties.state !== null ? 'State:' + autolinker.link(feature.properties.state.toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['total_population'] !== null ? 'Total population:' + autolinker.link(feature.properties['total_population'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties.county !== null ? 'Country and state:' + autolinker.link(feature.properties.county.toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + 'Total population:' + parseFloat(feature.properties.total_population).toLocaleString('en', {useGrouping:true})  + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + 'Total votes:' + parseFloat(feature.properties.votes).toLocaleString('en', {useGrouping:true})+''  + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' +'Republicans: '+ (parseFloat(feature.properties.rep16_frac).toFixed(2)+'%').fontcolor(redMarker) +'</td>\
@@ -142,21 +135,21 @@
         map.createPane('pan_Us');
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
-        function getColor(item){
-            if(item>=50){
-                return "rgb("+ item/100*255 + ",0,0)";
+        function getColor(rep,dem){
+            if(rep>dem){
+                return "rgb("+ (rep/100)*255 + ",0,0)";
             }
-            return "rgb(0,0,"+ item/100*255 + ")";
+            return "rgb(0,0,"+ (dem/100)*255 + ")";
         }
 
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
         {onEachFeature:pop_Usaver1_1,
         style: function (feature) {
             return {
-                "color": getColor(feature.properties.rep16_frac),
-                "fillColor" : getColor(feature.properties.rep16_frac),
-                "weight": 1,
-                "opacity": 0.65
+                "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
+                "fillColor" : getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
+                "weight": 0.5,
+                "opacity": 0.45
             };
         }
         ,pane:'pan_Us'
