@@ -532,3 +532,29 @@
         controlSearch.searchText( e.target.value );
 
         })*/
+
+            //    map.fitBounds(jsonISR.getBounds());
+        //getColorIsr(feature.properties.WinningPar)
+       // map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
+       /* jsonTest.eachLayer(function (layer) {
+            layer._path.id = 'feature-' + layer.feature.properties.id;
+        });*/
+
+        //console.log('search:locationfound', );
+        //map.removeLayer(this._markerSearch)
+
+
+        //console.log('search:locationfound', );
+        //map.removeLayer(this._markerSearch)
+
+                   /* if (map.hasLayer(jsonISR)) {
+                map.removeLayer(jsonISR);
+            } else {
+                map.addLayer(jsonISR);
+            }*/
+
+                    //ISRlegend.addTo(map);
+
+
+        
+
