@@ -77,6 +77,7 @@
             <!-- top aligned tabs -->
             <ul role="tablist">
                 <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li>
+                <li><a href="#filter" role="tab" target ="_blank"><img src ="images/checkbox.png"></i></a></li>
             </ul>
 
             <!-- bottom aligned tabs -->
@@ -112,6 +113,22 @@
                     button
                 </button>
             </div>
+
+            
+            <div class="leaflet-sidebar-pane" id="filter">
+                <h1 class="leaflet-sidebar-header">
+                    Filter bar
+                    <span class="leaflet-sidebar-close">
+                        <i class="fa fa-caret-left">
+                        </i>
+                    </span>
+                </h1>
+
+                <button id='CheckButton' onclick="checkFunction()">
+                    button
+                </button>
+            </div>
+
 
         </div>
     </div>
@@ -161,8 +178,8 @@
         function pop_Usaver1_1(feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
-                mouseout: resetHighlightUS,
-                click: zoomToFeature
+                mouseout: resetHighlightUS
+                //click: zoomToFeature
             });
             var popupContent = '<table>\
                     <tr>\
@@ -189,6 +206,10 @@
                 jsonTest.resetStyle(feature.target);
             });
         }
+
+        var checkFlag=false;
+
+
         function pop_Isr_saver1_1(feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
@@ -231,9 +252,29 @@
             }
             return "rgb(0,0,"+ (dem/100)*255 + ")";
         }
+        function getColorLegend(item) {
+            if (item == 'rep') {
+                return "rgb(255,0,0)";
+            }
+            if (item == 'dem')
+                return "rgb(0,0,255)";
+            return "rgb(64,64,64)";
+        }
 
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
         {onEachFeature:pop_Usaver1_1,
+        filter:
+             ( function(feature, layer) {
+                console.log('bla');
+
+                 if(checkFlag || feature.properties.rep16_frac >80){
+                    
+                    return true;
+                 }
+                 else 
+                    return false;
+        }),
+
         style: function (feature) {
             return {
                 "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
@@ -310,10 +351,35 @@
         });
 
         var myLink = document.getElementById('mylink');
-        function checkFunction() {
-            console.log(map.getBounds());
-        }
+        function checkFunction() { 
+            checkFlag = !checkFlag;
+            map.removeLayer(jsonTest);
+            jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
+             {
+                 onEachFeature:pop_Usaver1_1,
+                 filter:
+                    ( function(feature, layer) {
 
+                 if(checkFlag || feature.properties.rep16_frac >80){
+                    
+                    return true;
+                 }
+                 else 
+                    return false;
+        }),
+
+        style: function (feature) {
+            return {
+                "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
+                "fillColor" : getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
+                "weight": 0.5,
+                "opacity": 0.45
+            };
+        }
+        ,pane:'pan_Us'
+        });
+        jsonTest.addTo(map);
+        }
         searchbuttonUS.addTo(map);
         //searchbuttonIL.addTo(map);
 
@@ -323,15 +389,15 @@
         USlegend.onAdd = function (map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                grades = ['rep','dem'],
                 labels = ['Democrats', 'Republicans'];
             div.innerHTML += "<header>Elections</header>";
 
             // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length - 1; i++) {
+            for (var i = 0; i < grades.length; i++) {
                 div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '">' + '</i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                    '<i style="background:' + getColorLegend(grades[i]) + '">' + '</i> ' +
+                    labels[i] + ('<br>');
             }
 
             return div;
