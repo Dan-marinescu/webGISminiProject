@@ -729,7 +729,7 @@ L.Control.Search = L.Control.extend({
 	},
 
 	searchText: function(text) {
-		var code = text.charCodeAt(text.length);
+		var code = text.includes(text);
 
 		this._input.value = text;
 

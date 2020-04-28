@@ -1,95 +1,147 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="css/leaflet.css">
-        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="css/leaflet-search.css">
-        <link rel="stylesheet" href="css/easy-button.css">
-        <link rel="stylesheet" href="css/leaflet-sidebar.css">
-        <style>
-        #map {
-            width: 1931px;
-            height: 1252px;
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/qgis2web.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/leaflet-search.css">
+    <link rel="stylesheet" href="css/easy-button.css">
+    <link rel="stylesheet" href="/css/leaflet-sidebar.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
         }
-        </style>
-        <title></title>
-    </head>
 
-    <!-- SideBar FROM HERE -->
+        #map {
+            height: 100%;
+        }
 
-    <body>
-        <div id="sidebar" class="sidebar collapsed">
-            <!-- Nav tabs -->
-            <div class="sidebar-tabs">
-                <ul role="tablist">
-                    <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                    <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-                    <li><a href="https://github.com/benjaminyakobi/webGISminiProject" role="tab"  target="_blank"><img  src="images/github.png"></a></li>
-                    <li><a href="#search" role="tab" target ="_blank"><img src ="images/search-icon2.png"></i></a></li>
-                    <li><a href="#filter" role="tab" target ="_blank"><img src ="images/checkbox.png"></i></a></li>
-                </ul>
-    
-                <!-- <ul role="tablist">
-                    <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-                </ul> -->
-                
-            </div>
-    
-            <!-- Tab panes -->
-            <div class="sidebar-content">
-                <div class="sidebar-pane" id="home">
-                    <h1 class="sidebar-header">
-                        sidebar-v2
-                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                    </h1>
-    
-                </div>
-    
-                <div class="sidebar-pane" id="profile">
-                    <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                </div>
-    
-                <div class="sidebar-pane" id="search">
-                    <h1 class="sidebar-header">Search<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    
-                </div>
-                <div class="sidebar-pane" id="filter">
-                    <h1 class="sidebar-header">Filter<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    
-                </div>
+        .lorem {
+            font-style: italic;
+            color: #AAA;
+        }
 
-            </div>
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+
+        .legend i {
+            width: 16px;
+            height: 16px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .legend header {
+            text-align: center;
+            font-size: 16px;
+            margin: 2px 12px 8px;
+            color: #777;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+    </style>
+    <title></title>
+</head>
+
+<!-- SideBar FROM HERE -->
+
+<body>
+    <!-- optionally define the sidebar content via HTML markup -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+
+        <!-- nav tabs -->
+        <div class="leaflet-sidebar-tabs">
+            <!-- top aligned tabs -->
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li>
+            </ul>
+
+            <!-- bottom aligned tabs -->
+            <ul role="tablist">
+                <li><a
+                        href="https://public.opendatasoft.com/explore/dataset/usa-2016-presidential-election-by-county/map/?disjunctive.state&dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQVZHIiwieUF4aXMiOiJyZXAxNl9mcmFjIiwic2NpZW50aWZpY0Rpc3BsYXkiOnRydWUsImNvbG9yIjoiI0U5MUQwRSJ9LHsidHlwZSI6ImNvbHVtbiIsImZ1bmMiOiJBVkciLCJ5QXhpcyI6ImRlbTE2X2ZyYWMiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiIjMjMyMDY2In1dLCJ4QXhpcyI6InN0YXRlIiwibWF4cG9pbnRzIjoyMDAsInNvcnQiOiIiLCJjb25maWciOnsiZGF0YXNldCI6InVzYS0yMDE2LXByZXNpZGVudGlhbC1lbGVjdGlvbi1ieS1jb3VudHkiLCJvcHRpb25zIjp7ImRpc2p1bmN0aXZlLnN0YXRlIjp0cnVlfX19XSwidGltZXNjYWxlIjoiIiwiZGlzcGxheUxlZ2VuZCI6dHJ1ZSwiYWxpZ25Nb250aCI6dHJ1ZX0%3D&basemap=mapbox.light&location=5,33.11915,-103.44727">
+                        <img src="/images/us.png">
+                <li><a href="https://votes20.gov.il/">
+                        <img src="/images/il.png">
+                <li><a href="https://github.com/benjaminyakobi/webGISminiProject/">
+                        <img src="/images/github.png">
+                    </a> <i class="fa fa-github"></i></a></li>
+            </ul>
         </div>
 
-        <!-- SideBar UNTIL HERE -->
+        <!-- panel content -->
+        <div class="leaflet-sidebar-content">
+            <div class="leaflet-sidebar-pane" id="home">
+                <h1 class="leaflet-sidebar-header">
+                    Options Bar
+                    <span class="leaflet-sidebar-close">
+                        <i class="fa fa-caret-left">
+                        </i>
+                    </span>
+                </h1>
+                <fieldset id='radioLayer'>
+                    <input type="radio" value="Israel" onclick="handleClick(this);" name="group1">
+                    <img src="/images/il-tiny.png"><label>Israel</label>
+                    <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1">
+                    <img src="/images/us-tiny.png"><label>United States</label>
+                </fieldset>
+                <button id='CheckButton' onclick="checkFunction()">
+                    button
+                </button>
+            </div>
 
-        <div id="map"></div>
-        <script src="js/qgis2web_expressions.js"></script>
-        <script src="js/leaflet.js"></script>
-        <script src="js/leaflet.ajax.min.js"></script>
-        <script src="js/leaflet.rotatedMarker.js"></script>
-        <script src="js/leaflet.pattern.js"></script>
-        <script src="js/leaflet-hash.js"></script>
-        <script src="js/Autolinker.min.js"></script>
-        <script src="js/rbush.min.js"></script>
-        <script src="js/labelgun.min.js"></script>
-        <script src="js/labels.js"></script>
-        <script src="js/leaflet-search.js"></script>
-        <script src="js/easy-button.js"></script>
-        <script src="js/leaflet-sidebar.js"></script>
-        <script src="data/Usaver1_1.js"></script>
-        <script>
+        </div>
+    </div>
+
+    <!-- SideBar UNTIL HERE -->
+
+    <div id="map"></div>
+    <script src="js/qgis2web_expressions.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/leaflet.ajax.min.js"></script>
+    <script src="js/leaflet.rotatedMarker.js"></script>
+    <script src="js/leaflet.pattern.js"></script>
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="js/rbush.min.js"></script>
+    <script src="js/labelgun.min.js"></script>
+    <script src="js/labels.js"></script>
+    <script src="js/leaflet-search.js"></script>
+    <script src="js/easy-button.js"></script>
+    <script src="js/leaflet-sidebar.js"></script>
+    <script src="data/Usaver1_1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+
+    <script>
         var map = L.map('map', {
-            zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[29.209695545884674,-136.9676690548505],[56.09332735571773,-79.09526638980783]]);
+            zoomControl: true, maxZoom: 28, minZoom: 1
+        }).fitBounds([[29.209695545884674, -136.9676690548505], [56.09332735571773, -79.09526638980783]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
-        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var autolinker = new Autolinker({ truncate: { length: 30, location: 'smart' } });
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -107,6 +159,11 @@
         layer_OSMStandard_0;
         map.addLayer(layer_OSMStandard_0);
         function pop_Usaver1_1(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlightUS,
+                click: zoomToFeature
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties.state !== null ? 'State:' + autolinker.link(feature.properties.state.toLocaleString()) : '') + '</td>\
@@ -121,17 +178,50 @@
                         <td colspan="2">' + 'Total votes:' + parseFloat(feature.properties.votes).toLocaleString('en', {useGrouping:true})+''  + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' +'Republicans: '+ (parseFloat(feature.properties.rep16_frac).toFixed(2)+'%').fontcolor(redMarker) +'</td>\
+                        <td colspan="2">' + 'Republicans: ' + (parseFloat(feature.properties.rep16_frac).toFixed(2) + '%').fontcolor(redMarker) + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' +'Democrats: '+ (parseFloat(feature.properties.dem16_frac).toFixed(2) +'%').fontcolor(blueMarker) + '</td>\
+                        <td colspan="2">' + 'Democrats: ' + (parseFloat(feature.properties.dem16_frac).toFixed(2) + '%').fontcolor(blueMarker) + '</td>\
                     </tr>\
                 </table>';
-                layer.bindPopup(popupContent, {maxHeight: 400});
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+            layer.getPopup().on('remove', function() {
+                jsonTest.resetStyle(feature.target);
+            });
         }
-        var blueMarker =  "#0000ff";
-        var redMarker = "#ff0000" ;
-        
+        function pop_Isr_saver1_1(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlightISR,
+                click: zoomToFeature
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CityNameHe'] !== null ? 'City name(he): ' + autolinker.link(feature.properties['CityNameHe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CityNameEn'] !== null ? 'City name: ' + autolinker.link(feature.properties['CityNameEn'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - כחול לבן' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - ליכוד' : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f28'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f18'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Total Voters: ' + autolinker.link(feature.properties['Voters'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+            layer.getPopup().on('remove', function() {
+                jsonISR.resetStyle(feature.target);
+            });
+            //<td 
+
+        }
+        var blueMarker = "#0000ff";
+        var redMarker = "#ff0000";
+
         map.createPane('pan_Us');
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
@@ -154,16 +244,208 @@
         }
         ,pane:'pan_Us'
         });
+        
         jsonTest.addTo(map);
+        map.createPane('pan_Isr');
+        map.getPane('pan_Isr').style.zIndex = 401;
+        map.getPane('pan_Isr').style['mix-blend-mode'] = 'normal';
+        function getColorIsr(item) {
+            if (item == 'פה') {
+                return "rgb(255,0,0)";
+            }
+            if (item == 'מחל')
+                return "rgb(0,0,255)";
+            return "rgb(64,64,64)";
+        }
+        var jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
+            {
+                onEachFeature: pop_Isr_saver1_1,
+                style: function (feature) {
+                    return {
+                        "color": getColorIsr(feature.properties.WinningPar),
+                        "fillColor": getColorIsr(feature.properties.WinningPar),
+                        "weight": 1,
+                        "opacity": 0.65
+                    };
+                }
+                , pane: 'pan_Isr'
+            });
 
+        var sidebar = L.control.sidebar({ container: 'sidebar' }).addTo(map);
 
-        map.addControl( new L.Control.Search({layer: jsonTest,propertyName: 'county', zoom : 9,markerlocation : true}));
-        jsonTest.eachLayer(function (layer) {
-            layer._path.id = 'feature-' + layer.feature.properties.id;
+        var searchbuttonIL = new L.Control.Search(
+            {
+                layer: jsonISR,
+                propertyName: 'CityNameHe',
+                zoom: 12,
+                markerlocation: true,
+                textPlaceholder: 'חיפוש עבור ישראל...',
+                textErr: 'המיקום לא נמצא',
+                textCancel: "ביטול"
+            });
+
+        var searchbuttonUS = new L.Control.Search(
+            {
+                layer: jsonTest,
+                propertyName: 'county',
+                zoom: 9,
+                markerlocation: true,
+                textPlaceholder: 'Search for US...'
+            });
+
+        searchbuttonIL.on('search:locationfound', function (e) {
+            e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+            if (e.layer._popup)
+                e.layer.openPopup();
+        }).on('search:collapsed', function (e) {
+            console.log(e);
+            jsonISR.resetStyle(e);
         });
-        var sidebar = L.control.sidebar('sidebar').addTo(map);
 
+        searchbuttonUS.on('search:locationfound', function (e) {
+            e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+            if (e.layer._popup)
+                e.layer.openPopup();
+        }).on('search:collapsed', function (e) {
+        });
+
+        var myLink = document.getElementById('mylink');
+        function checkFunction() {
+            console.log(map.getBounds());
+        }
+
+        searchbuttonUS.addTo(map);
+        //searchbuttonIL.addTo(map);
+
+
+        var USlegend = L.control({ position: 'bottomright' });
+
+        USlegend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                labels = ['Democrats', 'Republicans'];
+            div.innerHTML += "<header>Elections</header>";
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length - 1; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '">' + '</i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+
+        USlegend.addTo(map);
+
+        var ISRlegend = L.control({ position: 'bottomright' });
+
+        ISRlegend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = ['מחל', 'פה', 'אחרים'],
+                labels = [];
+            div.innerHTML += "<header>Winning party</header>";
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColorIsr(grades[i]) + '">' + '</i> ' +
+                    grades[i] + '<br>';
+            }
+
+            return div;
+        };
+
+        var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>US</h4>' + (props ?
+                '<b>State and County:</b><br />' + props.county
+                : 'Hover over a state');
+        };
+
+        info.addTo(map);
+
+        function handleClick(item) {
+            if (item.value == 'Israel') {
+                if (map.hasLayer(jsonTest)) {
+                    map.removeLayer(jsonTest);
+                }
+                if (map.hasLayer(jsonISR) == false) {
+                    map.addLayer(jsonISR);
+                }
+                map.removeControl(USlegend);
+                ISRlegend.addTo(map);
+                map.fitBounds([[34.55168582782351, 41.94587334703223], [28.207560622035196, 28.279142328468787]]);
+                info.update = function (props) {
+                    this._div.innerHTML = '<h4>Israel</h4>' + (props ?
+                        '<b>City name:</b><br />' + props.CityNameEn + '<br />' + 'Winning party : ' + props.WinningPar
+                        : 'Hover over a city');
+                };
+                map.removeControl(searchbuttonUS);
+                searchbuttonIL.addTo(map);
+                
+            }
+            if (item.value == 'United States') {
+                if (map.hasLayer(jsonISR)) {
+                    map.removeLayer(jsonISR);
+                }
+                if (map.hasLayer(jsonTest) == false) {
+                    map.addLayer(jsonTest);
+                }
+                map.fitBounds([[29.209695545884674, -136.9676690548505], [56.09332735571773, -79.09526638980783]]);
+                map.removeControl(ISRlegend);
+                USlegend.addTo(map);
+                info.update = function (props) {
+                    this._div.innerHTML = '<h4>US</h4>' + (props ?
+                        '<b>State and County:</b><br />' + props.county
+                        : 'Hover over a state');
+                };
+                map.removeControl(searchbuttonIL);
+                searchbuttonUS.addTo(map);
+            }
+        }
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+            info.update(layer.feature.properties);
+        }
+        function resetHighlightUS(e) {
+            jsonTest.resetStyle(e.target);
+            info.update();
+        }
+        function resetHighlightISR(e) {
+            jsonISR.resetStyle(e.target);
+            info.update();
+        }
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+        var checkDefault = document.getElementById("radioUS");
+        checkDefault.checked = true;
+        handleClick(checkDefault);
         setBounds();
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
