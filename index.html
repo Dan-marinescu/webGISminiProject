@@ -179,6 +179,9 @@
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, { maxHeight: 400 });
+            layer.getPopup().on('remove', function() {
+                jsonTest.resetStyle(feature.target);
+            });
         }
         function pop_Isr_saver1_1(feature, layer) {
             layer.on({
@@ -204,6 +207,9 @@
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, { maxHeight: 400 });
+            layer.getPopup().on('remove', function() {
+                jsonISR.resetStyle(feature.target);
+            });
             //<td 
 
         }
@@ -286,9 +292,8 @@
             if (e.layer._popup)
                 e.layer.openPopup();
         }).on('search:collapsed', function (e) {
-            featuresLayer.eachLayer(function (layer) {	//restore feature color
-                featuresLayer.resetStyle(layer);
-            });
+            console.log(e);
+            jsonISR.resetStyle(e);
         });
 
         searchbuttonUS.on('search:locationfound', function (e) {
@@ -296,9 +301,6 @@
             if (e.layer._popup)
                 e.layer.openPopup();
         }).on('search:collapsed', function (e) {
-            featuresLayer.eachLayer(function (layer) {	//restore feature color
-                featuresLayer.resetStyle(layer);
-            });
         });
 
         var myLink = document.getElementById('mylink');
@@ -307,7 +309,7 @@
         }
 
         searchbuttonUS.addTo(map);
-        searchbuttonIL.addTo(map);
+        //searchbuttonIL.addTo(map);
 
 
         var USlegend = L.control({ position: 'bottomright' });
@@ -383,6 +385,9 @@
                         '<b>City name:</b><br />' + props.CityNameEn + '<br />' + 'Winning party : ' + props.WinningPar
                         : 'Hover over a city');
                 };
+                map.removeControl(searchbuttonUS);
+                searchbuttonIL.addTo(map);
+                
             }
             if (item.value == 'United States') {
                 if (map.hasLayer(jsonISR)) {
@@ -399,6 +404,8 @@
                         '<b>State and County:</b><br />' + props.county
                         : 'Hover over a state');
                 };
+                map.removeControl(searchbuttonIL);
+                searchbuttonUS.addTo(map);
             }
         }
         function highlightFeature(e) {
@@ -430,6 +437,7 @@
 
         var checkDefault = document.getElementById("radioUS");
         checkDefault.checked = true;
+        handleClick(checkDefault);
         setBounds();
     </script>
 </body>
