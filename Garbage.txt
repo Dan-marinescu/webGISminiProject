@@ -602,8 +602,74 @@
 ===================Dan end
 
 ===================Benyamin
-<li><a href="https://votes20.gov.il/">
-<img src="/images/il.png">
+    <li><a href="https://votes20.gov.il/">
+    <img src="/images/il.png">
+
+
+     /*   function resetSearch(string)
+        {
+            if(string == 'israel')
+            {
+                map.removeControl(searchbuttonIL);
+                searchbuttonIL = new L.Control.Search(
+                {
+                    layer: jsonISR,
+                    propertyName: 'CityNameHe',
+                    zoom: 12,
+                    markerlocation: true,
+                    textPlaceholder: 'חיפוש עבור ישראל...',
+                    textErr: 'המיקום לא נמצא',
+                    textCancel: "ביטול"
+                });
+                searchbuttonIL.on('search:locationfound', function (e) {
+                e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+                    if (e.layer._popup)
+                        e.layer.openPopup();
+                }).on('search:collapsed', function (e) {
+                    console.log(e);
+                    jsonISR.resetStyle(e);
+                });
+                searchbuttonIL.addTo(map);
+            }
+ 
+            if(string == 'us')
+            {
+                map.removeControl(searchbuttonUS);
+                searchbuttonUS = new L.Control.Search(
+                {
+                    layer: jsonTest,
+                    propertyName: 'county',
+                    zoom: 9,
+                    markerlocation: true,
+                    textPlaceholder: 'Search for US...'
+                });
+                searchbuttonUS.on('search:locationfound', function (e) {
+                    e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+                    if (e.layer._popup)
+                        e.layer.openPopup();
+                }).on('search:collapsed', function (e) {
+                });
+                searchbuttonUs.addTo(map);
+            } 
+        }*/
+
+        //searchbuttonIL.addTo(map);
+
+        //I have updated the leaflet-search.css also to align search icon.
+        //previous code lines in leaflet-search.css are under comment.
+
+                    <!-- </ul>
+        
+        <ul role="tablist"> -->
+            <!-- <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li> -->
+
+                    <!-- <fieldset id='radioLayer'>
+            <input type="radio" value="Israel" onclick="handleClick(this);" name="group1">
+            <img src="/images/il-tiny.png"><label>Israel</label>
+            <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1">
+            <img src="/images/us-tiny.png"><label>United States</label>
+        </fieldset> -->
+
 ===================Benyamin end
 
         

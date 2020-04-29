@@ -77,7 +77,8 @@
             <!-- top aligned tabs -->
             <ul role="tablist">
                 <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li>
-                <li><a href="#filter" role="tab" target ="_blank"><img src ="images/checkbox.png"></i></a></li>
+                <li><a href="#choseFlag" role="tab" target="_blank"><img src="images/flag-icon.png"></i></a></li>
+                <li><a href="#filter" role="tab" target="_blank"><img src="images/info-icon.png"></i></a></li>
             </ul>
 
             <!-- bottom aligned tabs -->
@@ -97,7 +98,35 @@
         <div class="leaflet-sidebar-content">
             <div class="leaflet-sidebar-pane" id="home">
                 <h1 class="leaflet-sidebar-header">
-                    Options Bar
+                    General Information
+                    <span class="leaflet-sidebar-close">
+                        <i class="fa fa-caret-left">
+                        </i>
+                    </span>
+                </h1>
+                <p style="color:Blue; font-size: 17px; text-align: right;"><strong>מגישים</strong></p>
+                <p style="color:Blue; font-size: 13px; text-align: right;"> שגיא וקנין ת"ז 316605617 </p>
+                <p style="color:Blue; font-size: 13px; text-align: right;"> דן מרינסקו ת"ז 204264543</p>
+                <p style="color:Blue; font-size: 13px; text-align: right;">בנימין יעקובי ת"ז 323492835</p>
+                <p style="color:Blue; font-size: 17px; text-align: right;"><strong>מטרת הפרויקט</strong></p>
+                <p style="color:Blue; font-size: 13px; text-align: right;">מטרת הפרויקט היא הצגת נתוני הבחירות לכנסת
+                    ה-21 במדינת ישראל ונתוני הבחירות לנשיאות ארה"ב שנערכו בשנת 2016</p>
+                <p style="color:Blue; font-size: 17px; text-align: right;"><strong>כפתורים</strong></p>
+                <p style="color:Blue; font-size: 13px; text-align: right;">
+                    על מנת לצפות בנתונים של מדינת ישראל, יש ללחוץ על הלשונית עם סימן <b>הדגל</b> ולסמן את ישראל בתיבת
+                    הבחירה <br><br>
+                    על מנת לבצע סינון של המידע המוצג על גבי המפות נבחר את הלשונית עם סימן <b>המידע</b> והאפשרויות יוצגו
+                    בפני המשתמש <br><br>
+                    ניתן לחפש מידע על ערים ומחוזות על ידי לחיצה על <b>זכוכית המגדלת</b>. עבור מדינת ישראל החיפוש היא
+                    בשפה העברית<br><br>
+                    על ידי לחיצה על סמל <b>הגיטהאב</b> המשתמש יופנה לקבצי הפרויקט המלאים<br><br>
+                    על ידי לחיצה על אחד מדגלי <b>ארה"ב או ישראל</b> המשתמש יופנה למקורות מהם נלקח המידע המוצג על המפות
+                </p>
+            </div>
+
+            <div class="leaflet-sidebar-pane" id="choseFlag">
+                <h1 class="leaflet-sidebar-header">
+                    Choose Country to Display Information
                     <span class="leaflet-sidebar-close">
                         <i class="fa fa-caret-left">
                         </i>
@@ -111,7 +140,6 @@
                 </fieldset>
             </div>
 
-            
             <div class="leaflet-sidebar-pane" id="filter">
                 <h1 class="leaflet-sidebar-header">
                     Filter bar
@@ -120,30 +148,34 @@
                         </i>
                     </span>
                 </h1>
-                <div id="filterUsPanel" >
-                    <input type="checkbox" id="democrats" name="democrats" checked/> Show democrats wins
+                <div id="filterUsPanel">
+                    <input type="checkbox" id="democrats" name="democrats" checked /> Show democrats wins
                     <br />
-                    <input type="checkbox" id="republicans" name="republicans" checked/> Show republicans wins
+                    <input type="checkbox" id="republicans" name="republicans" checked /> Show republicans wins
                     <br />
-                    <input type="checkbox" id="population" name="population" onclick="showSlider()" checked/> Filter by amount of population 
+                    <input type="checkbox" id="population" name="population" onclick="showSlider()" checked /> Filter by
+                    amount of population
                     <br />
-                    <div class= "slidecontainer" id="slideCon">
-                        <input type="range" min="1" max="1000000" value="500000" class="slider" id="myRange" onclick="showSlider()">
-                        <p>Value: <span id = "demo"></span></p>
+                    <div class="slidecontainer" id="slideCon">
+                        <input type="range" min="1" max="1000000" value="500000" class="slider" id="myRange"
+                            onclick="showSlider()">
+                        <p>Value: <span id="demo"></span></p>
                     </div>
                     <br />
                     <button id='CheckButton' onclick="checkFunction()">
                         Confirm
                     </button>
                 </div>
-                <div id="filterIsrPanel" style="display: none;" >
-                    <label for="fname">Winning party:</label>
+                <div id="filterIsrPanel" style="display: none;">
+                    <label for="fname">Winning party(פה / מחל):</label>
                     <input type="text" id="WinningParInput" name="fname"><br><br>
-                    <input type="checkbox" id="votingRatio" name="votesRatio" onclick="isrshowSlider()" />Minimum vote ratio filter 
+                    <input type="checkbox" id="votingRatio" name="votesRatio" onclick="isrshowSlider()" />Minimum vote
+                    ratio filter
                     <br />
-                    <div class= "slidecontainer" id = "isrRangeCon" style="display:none;">
-                        <input type="range" min="0" max="100" value="20" class="slider" id="myVotingRange" onclick="isrshowSlider()">
-                        <p>Value: <span id = "demoIS"></span></p>
+                    <div class="slidecontainer" id="isrRangeCon" style="display:none;">
+                        <input type="range" min="0" max="100" value="20" class="slider" id="myVotingRange"
+                            onclick="isrshowSlider()">
+                        <p>Value: <span id="demoIS"></span></p>
                     </div>
                     <br />
                     <button id='isrFilterButton' onclick="filterIsrael()">
@@ -151,8 +183,6 @@
                     </button>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -179,13 +209,13 @@
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
         output.innerHTML = slider.value;
-        slider.oninput = function(){
+        slider.oninput = function () {
             output.innerHTML = slider.value;
         }
         var isrSlider = document.getElementById("myVotingRange");
         var isrOutput = document.getElementById("demoIS");
         isrOutput.innerHTML = isrSlider.value;
-        isrSlider.oninput = function(){
+        isrSlider.oninput = function () {
             isrOutput.innerHTML = isrSlider.value;
         }
         var map = L.map('map', {
@@ -224,10 +254,10 @@
                         <td colspan="2">' + (feature.properties.county !== null ? 'Country and state:' + autolinker.link(feature.properties.county.toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + 'Total population:' + parseFloat(feature.properties.total_population).toLocaleString('en', {useGrouping:true})  + '</td>\
+                        <td colspan="2">' + 'Total population:' + parseFloat(feature.properties.total_population).toLocaleString('en', { useGrouping: true }) + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + 'Total votes:' + parseFloat(feature.properties.votes).toLocaleString('en', {useGrouping:true})+''  + '</td>\
+                        <td colspan="2">' + 'Total votes:' + parseFloat(feature.properties.votes).toLocaleString('en', { useGrouping: true }) + '' + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' + 'Republicans: ' + (parseFloat(feature.properties.rep16_frac).toFixed(2) + '%').fontcolor(redMarker) + '</td>\
@@ -237,7 +267,7 @@
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, { maxHeight: 400 });
-            layer.getPopup().on('remove', function() {
+            layer.getPopup().on('remove', function () {
                 jsonTest.resetStyle(feature.target);
             });
         }
@@ -266,7 +296,7 @@
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, { maxHeight: 400 });
-            layer.getPopup().on('remove', function() {
+            layer.getPopup().on('remove', function () {
                 jsonISR.resetStyle(feature.target);
             });
             //<td 
@@ -278,11 +308,11 @@
         map.createPane('pan_Us');
         map.getPane('pan_Us').style.zIndex = 401;
         map.getPane('pan_Us').style['mix-blend-mode'] = 'normal';
-        function getColor(rep,dem){
-            if(rep>dem){
-                return "rgb("+ (rep/100)*255 + ",0,0)";
+        function getColor(rep, dem) {
+            if (rep > dem) {
+                return "rgb(" + (rep / 100) * 255 + ",0,0)";
             }
-            return "rgb(0,0,"+ (dem/100)*255 + ")";
+            return "rgb(0,0," + (dem / 100) * 255 + ")";
         }
         function getColorLegend(item) {
             if (item == 'rep') {
@@ -294,18 +324,19 @@
         }
 
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
-        {onEachFeature:pop_Usaver1_1,
-        style: function (feature) {
-            return {
-                "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
-                "fillColor" : getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
-                "weight": 0.5,
-                "opacity": 0.45
-            };
-        }
-        ,pane:'pan_Us'
-        });
-        
+            {
+                onEachFeature: pop_Usaver1_1,
+                style: function (feature) {
+                    return {
+                        "color": getColor(feature.properties.rep16_frac, feature.properties.dem16_frac),
+                        "fillColor": getColor(feature.properties.rep16_frac, feature.properties.dem16_frac),
+                        "weight": 0.5,
+                        "opacity": 0.45
+                    };
+                }
+                , pane: 'pan_Us'
+            });
+
         jsonTest.addTo(map);
         map.createPane('pan_Isr');
         map.getPane('pan_Isr').style.zIndex = 401;
@@ -373,98 +404,96 @@
         var myLink = document.getElementById('mylink');
 
 
-        function showSlider(){
-            if(document.getElementById('population').checked){ 
-                   document.getElementById('slideCon').style.display ='block';
-               }
-            else{
-                document.getElementById('slideCon').style.display ='none';
+        function showSlider() {
+            if (document.getElementById('population').checked) {
+                document.getElementById('slideCon').style.display = 'block';
+            }
+            else {
+                document.getElementById('slideCon').style.display = 'none';
             }
         }
-        function isrshowSlider(){
-            if(document.getElementById('votingRatio').checked){ 
-                   document.getElementById('isrRangeCon').style.display ='block';
-               }
-            else{
-                document.getElementById('isrRangeCon').style.display ='none';
+        function isrshowSlider() {
+            if (document.getElementById('votingRatio').checked) {
+                document.getElementById('isrRangeCon').style.display = 'block';
+            }
+            else {
+                document.getElementById('isrRangeCon').style.display = 'none';
             }
         }
-        function checkFunction() { 
+        function checkFunction() {
             map.removeLayer(jsonTest);
             jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
-             {
-                onEachFeature:pop_Usaver1_1,
-                filter:
-                    ( function(feature, layer) {
+                {
+                    onEachFeature: pop_Usaver1_1,
+                    filter:
+                        (function (feature, layer) {
 
-                if(document.getElementById("republicans").checked && feature.properties.rep16_frac > feature.properties.dem16_frac){
-                    if(document.getElementById('population').checked && feature.properties.total_population < slider.value)
-                        return false;
-                    return true;
-                }
-                else if(document.getElementById("democrats").checked && feature.properties.dem16_frac > feature.properties.rep16_frac){
-                    if(document.getElementById('population').checked && feature.properties.total_population < slider.value)
-                        return false;   
-                    return true;
-                }
-                else
-                    return false;
-                
-        }),
+                            if (document.getElementById("republicans").checked && feature.properties.rep16_frac > feature.properties.dem16_frac) {
+                                if (document.getElementById('population').checked && feature.properties.total_population < slider.value)
+                                    return false;
+                                return true;
+                            }
+                            else if (document.getElementById("democrats").checked && feature.properties.dem16_frac > feature.properties.rep16_frac) {
+                                if (document.getElementById('population').checked && feature.properties.total_population < slider.value)
+                                    return false;
+                                return true;
+                            }
+                            else
+                                return false;
 
-        style: function (feature) {
-            return {
-                "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
-                "fillColor" : getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
-                "weight": 0.5,
-                "opacity": 0.45
-            };
+                        }),
+
+                    style: function (feature) {
+                        return {
+                            "color": getColor(feature.properties.rep16_frac, feature.properties.dem16_frac),
+                            "fillColor": getColor(feature.properties.rep16_frac, feature.properties.dem16_frac),
+                            "weight": 0.5,
+                            "opacity": 0.45
+                        };
+                    }
+                    , pane: 'pan_Us'
+                });
+            jsonTest.addTo(map);
         }
-        ,pane:'pan_Us'
-        });
-        jsonTest.addTo(map);
-        }
-        function filterIsrael() { 
+        function filterIsrael() {
             map.removeLayer(jsonISR);
             jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
-            {
-                onEachFeature:pop_Isr_saver1_1,
-                filter:
-                    (function(feature, layer) {
-                        var string = document.getElementById("WinningParInput").value;
-                        if(string != "" && string != feature.properties["WinningPar"])
-                            return false;
-                        if(document.getElementById("votingRatio").checked == true &&
-                        (feature.properties["Voters"]/feature.properties["Bazab"])*100 < isrSlider.value)
-                            return false;
-                        
-                        return true;
-                }),
+                {
+                    onEachFeature: pop_Isr_saver1_1,
+                    filter:
+                        (function (feature, layer) {
+                            var string = document.getElementById("WinningParInput").value;
+                            if (string != "" && string != feature.properties["WinningPar"])
+                                return false;
+                            if (document.getElementById("votingRatio").checked == true &&
+                                (feature.properties["Voters"] / feature.properties["Bazab"]) * 100 < isrSlider.value)
+                                return false;
 
-                style: function (feature) {
-                    return {
-                    "color": getColorIsr(feature.properties.WinningPar),
-                    "fillColor": getColorIsr(feature.properties.WinningPar),
-                    "weight": 1,
-                    "opacity": 0.65
-                  };
-               }
-            ,pane:'pan_Isr'
-            });
+                            return true;
+                        }),
+
+                    style: function (feature) {
+                        return {
+                            "color": getColorIsr(feature.properties.WinningPar),
+                            "fillColor": getColorIsr(feature.properties.WinningPar),
+                            "weight": 1,
+                            "opacity": 0.65
+                        };
+                    }
+                    , pane: 'pan_Isr'
+                });
             jsonISR.addTo(map);
         }
 
 
         searchbuttonUS.addTo(map);
-        //searchbuttonIL.addTo(map);
-
 
         var USlegend = L.control({ position: 'bottomright' });
 
         USlegend.onAdd = function (map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = ['rep','dem'],
+                grades = ['rep', 'dem'],
                 labels = ['Democrats', 'Republicans'];
             div.innerHTML += "<header>Elections</header>";
 
@@ -536,7 +565,7 @@
                 searchbuttonIL.addTo(map);
                 document.getElementById("filterUsPanel").style.display = "none";
                 document.getElementById("filterIsrPanel").style.display = "block";
-                
+
             }
             if (item.value == 'United States') {
                 if (map.hasLayer(jsonISR)) {
@@ -585,53 +614,7 @@
         function zoomToFeature(e) {
             map.fitBounds(e.target.getBounds());
         }
-     /*   function resetSearch(string)
-        {
-            if(string == 'israel')
-            {
-                map.removeControl(searchbuttonIL);
-                searchbuttonIL = new L.Control.Search(
-                {
-                    layer: jsonISR,
-                    propertyName: 'CityNameHe',
-                    zoom: 12,
-                    markerlocation: true,
-                    textPlaceholder: 'חיפוש עבור ישראל...',
-                    textErr: 'המיקום לא נמצא',
-                    textCancel: "ביטול"
-                });
-                searchbuttonIL.on('search:locationfound', function (e) {
-                e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
-                    if (e.layer._popup)
-                        e.layer.openPopup();
-                }).on('search:collapsed', function (e) {
-                    console.log(e);
-                    jsonISR.resetStyle(e);
-                });
-                searchbuttonIL.addTo(map);
-            }
- 
-            if(string == 'us')
-            {
-                map.removeControl(searchbuttonUS);
-                searchbuttonUS = new L.Control.Search(
-                {
-                    layer: jsonTest,
-                    propertyName: 'county',
-                    zoom: 9,
-                    markerlocation: true,
-                    textPlaceholder: 'Search for US...'
-                });
-                searchbuttonUS.on('search:locationfound', function (e) {
-                    e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
-                    if (e.layer._popup)
-                        e.layer.openPopup();
-                }).on('search:collapsed', function (e) {
-                });
-                searchbuttonUs.addTo(map);
-            } 
-        }*/
-        
+
         var checkDefault = document.getElementById("radioUS");
         checkDefault.checked = true;
         handleClick(checkDefault);
