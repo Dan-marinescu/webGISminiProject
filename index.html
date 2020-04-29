@@ -21,7 +21,7 @@
         }
 
         #map {
-            height: 100%;
+            height: 98%;
         }
 
         .lorem {
@@ -109,9 +109,6 @@
                     <input type="radio" id="radioUS" value="United States" onclick="handleClick(this);" name="group1">
                     <img src="/images/us-tiny.png"><label>United States</label>
                 </fieldset>
-                <button id='CheckButton' onclick="checkFunction()">
-                    button
-                </button>
             </div>
 
             
@@ -123,21 +120,36 @@
                         </i>
                     </span>
                 </h1>
-                <input type="checkbox" id="democrats" name="democrats" checked/> Show democrats wins
-                <br />
-                <input type="checkbox" id="republicans" name="republicans" checked/> Show republicans wins
-                <br />
-                <input type="checkbox" id="population" name="population" onclick="showSlider()" checked/> Filter by amount of population 
-                <br />
-                <div class= "slidecontainer">
-                    <input type="range" min="1" max="1000000" value="500000" class="slider" id="myRange" onclick="showSlider()">
-                    <p>Value: <span id = "demo"></span></p>
+                <div id="filterUsPanel" >
+                    <input type="checkbox" id="democrats" name="democrats" checked/> Show democrats wins
+                    <br />
+                    <input type="checkbox" id="republicans" name="republicans" checked/> Show republicans wins
+                    <br />
+                    <input type="checkbox" id="population" name="population" onclick="showSlider()" checked/> Filter by amount of population 
+                    <br />
+                    <div class= "slidecontainer" id="slideCon">
+                        <input type="range" min="1" max="1000000" value="500000" class="slider" id="myRange" onclick="showSlider()">
+                        <p>Value: <span id = "demo"></span></p>
+                    </div>
+                    <br />
+                    <button id='CheckButton' onclick="checkFunction()">
+                        Confirm
+                    </button>
                 </div>
-                <br />
-
-                <button id='CheckButton' onclick="checkFunction()">
-                    Confirm
-                </button>
+                <div id="filterIsrPanel" style="display: none;" >
+                    <label for="fname">Winning party:</label>
+                    <input type="text" id="WinningParInput" name="fname"><br><br>
+                    <input type="checkbox" id="votingRatio" name="votesRatio" onclick="isrshowSlider()" />Minimum vote ratio filter 
+                    <br />
+                    <div class= "slidecontainer" id = "isrRangeCon" style="display:none;">
+                        <input type="range" min="0" max="100" value="20" class="slider" id="myVotingRange" onclick="isrshowSlider()">
+                        <p>Value: <span id = "demoIS"></span></p>
+                    </div>
+                    <br />
+                    <button id='isrFilterButton' onclick="filterIsrael()">
+                        Confirm
+                    </button>
+                </div>
             </div>
 
 
@@ -170,7 +182,12 @@
         slider.oninput = function(){
             output.innerHTML = slider.value;
         }
-
+        var isrSlider = document.getElementById("myVotingRange");
+        var isrOutput = document.getElementById("demoIS");
+        isrOutput.innerHTML = isrSlider.value;
+        isrSlider.oninput = function(){
+            isrOutput.innerHTML = isrSlider.value;
+        }
         var map = L.map('map', {
             zoomControl: true, maxZoom: 28, minZoom: 1
         }).fitBounds([[29.209695545884674, -136.9676690548505], [56.09332735571773, -79.09526638980783]]);
@@ -358,12 +375,18 @@
 
         function showSlider(){
             if(document.getElementById('population').checked){ 
-                   document.getElementById('myRange').style.display ='block';
-                   document.getElementById('demo').style.display = 'block';
+                   document.getElementById('slideCon').style.display ='block';
                }
             else{
-                document.getElementById('myRange').style.display ='none';
-                document.getElementById('demo').style.display = 'none';
+                document.getElementById('slideCon').style.display ='none';
+            }
+        }
+        function isrshowSlider(){
+            if(document.getElementById('votingRatio').checked){ 
+                   document.getElementById('isrRangeCon').style.display ='block';
+               }
+            else{
+                document.getElementById('isrRangeCon').style.display ='none';
             }
         }
         function checkFunction() { 
@@ -401,6 +424,37 @@
         });
         jsonTest.addTo(map);
         }
+        function filterIsrael() { 
+            map.removeLayer(jsonISR);
+            jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
+            {
+                onEachFeature:pop_Isr_saver1_1,
+                filter:
+                    (function(feature, layer) {
+                        var string = document.getElementById("WinningParInput").value;
+                        if(string != "" && string != feature.properties["WinningPar"])
+                            return false;
+                        if(document.getElementById("votingRatio").checked == true &&
+                        (feature.properties["Voters"]/feature.properties["Bazab"])*100 < isrSlider.value)
+                            return false;
+                        
+                        return true;
+                }),
+
+                style: function (feature) {
+                    return {
+                    "color": getColorIsr(feature.properties.WinningPar),
+                    "fillColor": getColorIsr(feature.properties.WinningPar),
+                    "weight": 1,
+                    "opacity": 0.65
+                  };
+               }
+            ,pane:'pan_Isr'
+            });
+            jsonISR.addTo(map);
+        }
+
+
         searchbuttonUS.addTo(map);
         //searchbuttonIL.addTo(map);
 
@@ -480,6 +534,8 @@
                 };
                 map.removeControl(searchbuttonUS);
                 searchbuttonIL.addTo(map);
+                document.getElementById("filterUsPanel").style.display = "none";
+                document.getElementById("filterIsrPanel").style.display = "block";
                 
             }
             if (item.value == 'United States') {
@@ -499,6 +555,8 @@
                 };
                 map.removeControl(searchbuttonIL);
                 searchbuttonUS.addTo(map);
+                document.getElementById("filterUsPanel").style.display = "block";
+                document.getElementById("filterIsrPanel").style.display = "none";
             }
         }
         function highlightFeature(e) {
@@ -527,7 +585,53 @@
         function zoomToFeature(e) {
             map.fitBounds(e.target.getBounds());
         }
-
+     /*   function resetSearch(string)
+        {
+            if(string == 'israel')
+            {
+                map.removeControl(searchbuttonIL);
+                searchbuttonIL = new L.Control.Search(
+                {
+                    layer: jsonISR,
+                    propertyName: 'CityNameHe',
+                    zoom: 12,
+                    markerlocation: true,
+                    textPlaceholder: 'חיפוש עבור ישראל...',
+                    textErr: 'המיקום לא נמצא',
+                    textCancel: "ביטול"
+                });
+                searchbuttonIL.on('search:locationfound', function (e) {
+                e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+                    if (e.layer._popup)
+                        e.layer.openPopup();
+                }).on('search:collapsed', function (e) {
+                    console.log(e);
+                    jsonISR.resetStyle(e);
+                });
+                searchbuttonIL.addTo(map);
+            }
+ 
+            if(string == 'us')
+            {
+                map.removeControl(searchbuttonUS);
+                searchbuttonUS = new L.Control.Search(
+                {
+                    layer: jsonTest,
+                    propertyName: 'county',
+                    zoom: 9,
+                    markerlocation: true,
+                    textPlaceholder: 'Search for US...'
+                });
+                searchbuttonUS.on('search:locationfound', function (e) {
+                    e.layer.setStyle({ fillColor: '#3f0', color: '#0f0' });
+                    if (e.layer._popup)
+                        e.layer.openPopup();
+                }).on('search:collapsed', function (e) {
+                });
+                searchbuttonUs.addTo(map);
+            } 
+        }*/
+        
         var checkDefault = document.getElementById("radioUS");
         checkDefault.checked = true;
         handleClick(checkDefault);
