@@ -123,9 +123,20 @@
                         </i>
                     </span>
                 </h1>
+                <input type="checkbox" id="democrats" name="democrats" checked/> Show democrats wins
+                <br />
+                <input type="checkbox" id="republicans" name="republicans" checked/> Show republicans wins
+                <br />
+                <input type="checkbox" id="population" name="population" onclick="showSlider()" checked/> Filter by amount of population 
+                <br />
+                <div class= "slidecontainer">
+                    <input type="range" min="1" max="1000000" value="500000" class="slider" id="myRange" onclick="showSlider()">
+                    <p>Value: <span id = "demo"></span></p>
+                </div>
+                <br />
 
                 <button id='CheckButton' onclick="checkFunction()">
-                    button
+                    Confirm
                 </button>
             </div>
 
@@ -153,6 +164,13 @@
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
     <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+        slider.oninput = function(){
+            output.innerHTML = slider.value;
+        }
+
         var map = L.map('map', {
             zoomControl: true, maxZoom: 28, minZoom: 1
         }).fitBounds([[29.209695545884674, -136.9676690548505], [56.09332735571773, -79.09526638980783]]);
@@ -207,9 +225,6 @@
             });
         }
 
-        var checkFlag=false;
-
-
         function pop_Isr_saver1_1(feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
@@ -263,18 +278,6 @@
 
         var jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
         {onEachFeature:pop_Usaver1_1,
-        filter:
-             ( function(feature, layer) {
-                console.log('bla');
-
-                 if(checkFlag || feature.properties.rep16_frac >80){
-                    
-                    return true;
-                 }
-                 else 
-                    return false;
-        }),
-
         style: function (feature) {
             return {
                 "color": getColor(feature.properties.rep16_frac,feature.properties.dem16_frac),
@@ -351,21 +354,39 @@
         });
 
         var myLink = document.getElementById('mylink');
+
+
+        function showSlider(){
+            if(document.getElementById('population').checked){ 
+                   document.getElementById('myRange').style.display ='block';
+                   document.getElementById('demo').style.display = 'block';
+               }
+            else{
+                document.getElementById('myRange').style.display ='none';
+                document.getElementById('demo').style.display = 'none';
+            }
+        }
         function checkFunction() { 
-            checkFlag = !checkFlag;
             map.removeLayer(jsonTest);
             jsonTest = new L.GeoJSON.AJAX(["data/Us_election_data.geojson"],
              {
-                 onEachFeature:pop_Usaver1_1,
-                 filter:
+                onEachFeature:pop_Usaver1_1,
+                filter:
                     ( function(feature, layer) {
 
-                 if(checkFlag || feature.properties.rep16_frac >80){
-                    
+                if(document.getElementById("republicans").checked && feature.properties.rep16_frac > feature.properties.dem16_frac){
+                    if(document.getElementById('population').checked && feature.properties.total_population < slider.value)
+                        return false;
                     return true;
-                 }
-                 else 
+                }
+                else if(document.getElementById("democrats").checked && feature.properties.dem16_frac > feature.properties.rep16_frac){
+                    if(document.getElementById('population').checked && feature.properties.total_population < slider.value)
+                        return false;   
+                    return true;
+                }
+                else
                     return false;
+                
         }),
 
         style: function (feature) {
