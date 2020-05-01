@@ -244,7 +244,6 @@
             layer.on({
                 mouseover: highlightFeature,
                 mouseout: resetHighlightUS
-                //click: zoomToFeature
             });
             var popupContent = '<table>\
                     <tr>\
@@ -286,10 +285,10 @@
                         <td colspan="2">' + (feature.properties['CityNameEn'] !== null ? 'City name: ' + autolinker.link(feature.properties['CityNameEn'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - כחול לבן' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - ליכוד' : '') + '</td>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - כחול לבן' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - ליכוד' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'שס') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - מפלגת ש"ס' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ום') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - הרשימה המשותפת' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ג') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - יהדות התורה' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'אמת') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - מפלגת העבודה' : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ל') ? 'Winning party: ' + autolinker.link(feature.properties['WinningPar'].toLocaleString()) + ' - ישראל ביתנו' : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f28'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f18'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + ((feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'פה') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f28'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'מחל') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f18'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ל') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f17'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ג') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f2'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'ום') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f4'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'שס') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f43'].toLocaleString()) : (feature.properties['WinningPar'] !== null && feature.properties['WinningPar'] == 'אמת') ? 'Winning Party Voters: ' + autolinker.link(feature.properties['f1'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['WinningPar'] !== null ? 'Total Voters: ' + autolinker.link(feature.properties['Voters'].toLocaleString()) : '') + '</td>\
@@ -299,7 +298,6 @@
             layer.getPopup().on('remove', function () {
                 jsonISR.resetStyle(feature.target);
             });
-            //<td 
 
         }
         var blueMarker = "#0000ff";
@@ -345,9 +343,32 @@
             if (item == 'פה') {
                 return "rgb(255,0,0)";
             }
-            if (item == 'מחל')
-                return "rgb(0,0,255)";
+
+            if (item == 'מחל'){
+                return "rgb(0,0,102)";
+            }
+            
+            if(item == 'שס'){
+                return "rgb(102,102,255)"
+            }
+
+            if(item == 'ג'){
+                return "rgb(178,102,255)";
+            }
+
+            if(item == 'אמת'){
+                return "rgb(204,229,255)";
+            }
+            
+            if(item == 'ום'){
+                return "rgb(0,153,0)";
+            }
+            
+            if(item == 'ל'){
+                return "rgb(255,255,0)";
+            }
             return "rgb(64,64,64)";
+
         }
         var jsonISR = new L.GeoJSON.AJAX(["data/ISR_Election_2019.geojson"],
             {
@@ -495,7 +516,7 @@
             var div = L.DomUtil.create('div', 'info legend'),
                 grades = ['rep', 'dem'],
                 labels = ['Democrats', 'Republicans'];
-            div.innerHTML += "<header>Elections</header>";
+            div.innerHTML += "<header><b>US Elections 2016<b></header>";
 
             // loop through our density intervals and generate a label with a colored square for each interval
             for (var i = 0; i < grades.length; i++) {
@@ -514,15 +535,15 @@
         ISRlegend.onAdd = function (map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = ['מחל', 'פה', 'אחרים'],
-                labels = [];
-            div.innerHTML += "<header>Winning party</header>";
+                grades = ['מחל', 'פה', 'שס', 'ג', 'אמת', 'ל', 'ום', 'אחרים'],
+                labels = ['מחל - הליכוד', 'פה - כחול לבן', 'שס - מפלגת ש"ס', 'ג - יהדות התורה', 'אמת - העבודה', 'ל - ישראל ביתנו', 'מפלגות ערביות', 'מפלגות אחרות'];
+            div.innerHTML += "<header><b>המפלגות הגדולות בכנסת ה-21<b></header>";
 
             // loop through our density intervals and generate a label with a colored square for each interval
             for (var i = 0; i < grades.length; i++) {
                 div.innerHTML +=
                     '<i style="background:' + getColorIsr(grades[i]) + '">' + '</i> ' +
-                    grades[i] + '<br>';
+                    '<p style="text-align: right">' + labels[i] + '</p>';
             }
 
             return div;

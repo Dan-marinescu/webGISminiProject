@@ -670,6 +670,13 @@
             <img src="/images/us-tiny.png"><label>United States</label>
         </fieldset> -->
 
+        //click: zoomToFeature
+        //<td 
+        //div.innerHTML += "<header>Winning party</header>";
+        //div.innerHTML += "<header>Elections</header>";
+
+
+
 ===================Benyamin end
 
         
